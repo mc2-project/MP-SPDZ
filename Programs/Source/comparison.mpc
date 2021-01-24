@@ -1,0 +1,5 @@
+@for_range(500)
+def loop_body(i):
+	a = sint.get_random_int(64)
+	b = sint.get_random_int(64)
+	c = (a < b).reveal()

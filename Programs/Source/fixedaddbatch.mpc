@@ -1,0 +1,19 @@
+fixed_f=10
+fixed_k=41
+cfix.set_precision(fixed_f, fixed_k)
+
+a_num = sfix(.001)
+b_num = sfix(.002)
+
+a = Array(10000, sfix(.001))
+b = Array(10000, sfix(.001))
+
+a.assign_all(a_num)
+b.assign_all(b_num)
+
+# only for optimization
+aa = a.get_vector()
+bb = b.get_vector()
+
+# store in memory to prevent dead code elimination
+(aa + bb).store_in_mem(regint(0))

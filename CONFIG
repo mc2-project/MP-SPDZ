@@ -1,0 +1,57 @@
+ROOT = .
+
+OPTIM= -O3
+#PROF = -pg
+#DEBUG = -DDEBUG
+#MEMPROTECT = -DMEMPROTECT
+GDEBUG = -g
+
+# set this to your preferred local storage directory
+PREP_DIR = '-DPREP_DIR="Player-Data/"'
+
+# set for SHE preprocessing (SPDZ and Overdrive)
+USE_NTL = 0
+
+# set for using GF(2^128) online phase, OT, MASCOT, or BMR
+# unset for GF(2^40) online and offline phase
+USE_GF2N_LONG = 1
+
+# set to -march=<architecture> for optimization
+# AES-NI is required for BMR
+# PCLMUL is required for GF(2^128) computation
+# AVX2 support (Haswell or later) is used to optimize OT
+# AVX/AVX2 is required for replicated binary secret sharing
+# BMI2 is used to optimize multiplication modulo a prime
+ARCH = -mtune=native -msse4.1 -maes -mpclmul -mavx -mavx2 -mbmi2
+
+# allow to set compiler in CONFIG.mine
+CXX = g++
+
+#use CONFIG.mine to overwrite DIR settings
+-include CONFIG.mine
+
+ifeq ($(USE_GF2N_LONG),1)
+GF2N_LONG = -DUSE_GF2N_LONG
+endif
+
+# MAX_MOD_SZ must be at least ceil(len(p)/len(word))
+# Default is 2, which suffices for 128-bit p
+# MOD = -DMAX_MOD_SZ=2
+
+LDLIBS = -lmpirxx -lmpir -lsodium $(MY_LDLIBS)
+LDLIBS += -lboost_system -lssl -lcrypto
+
+ifeq ($(USE_NTL),1)
+LDLIBS := -lntl -lgmp  $(LDLIBS)
+endif
+
+OS := $(shell uname -s)
+ifeq ($(OS), Linux)
+LDLIBS += -lrt
+endif
+
+BOOST = -lboost_system -lboost_thread $(MY_BOOST)
+
+CFLAGS += $(ARCH) $(MY_CFLAGS) $(GDEBUG) -Wextra -Wall $(OPTIM) -I$(ROOT) -pthread $(PROF) $(DEBUG) $(MOD) $(MEMPROTECT) $(GF2N_LONG) $(PREP_DIR) -std=c++11 -Werror -no-pie
+CPPFLAGS = $(CFLAGS)
+LD = $(CXX)

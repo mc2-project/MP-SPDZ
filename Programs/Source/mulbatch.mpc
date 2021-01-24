@@ -1,0 +1,14 @@
+a_num = sint.get_random_int(32)
+b_num = sint.get_random_int(32)
+
+a = Array(10000, sint.get_type(32))
+b = Array(10000, sint.get_type(32))
+
+a.assign_all(a_num)
+b.assign_all(b_num)
+
+# only for optimization
+aa = a.get_vector()
+bb = b.get_vector()
+# store in memory to prevent dead code elimination
+sint.dot_product(aa, bb).store_in_mem(regint(0))

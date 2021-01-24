@@ -1,0 +1,15 @@
+a_num = sfloat(.001)
+b_num = sfloat(.002)
+
+a = Array(10000, sfloat(.001))
+b = Array(10000, sfloat(.001))
+
+a.assign_all(a_num)
+b.assign_all(b_num)
+
+# only for optimization
+aa = a.get_vector()
+bb = b.get_vector()
+
+# store in memory to prevent dead code elimination
+(aa + bb).store_in_mem(regint(0))

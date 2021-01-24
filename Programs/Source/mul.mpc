@@ -1,0 +1,6 @@
+a = sint.get_random_int(32)
+b = sint.get_random_int(32)
+@for_range(1000)
+def loop_body(i):
+	c = a * b
+	#print_ln("%s", c.reveal())

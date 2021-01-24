@@ -1,0 +1,9 @@
+a_num = sint.get_random_int(64)
+
+a = Array(10000, sint.get_type(64))
+a.assign_all(a_num)
+
+# only for optimization
+aa = a.get_vector()
+# store in memory to prevent dead code elimination
+sbitintvec.from_vec(aa[i].bit_decompose() for i in range(len(aa)))

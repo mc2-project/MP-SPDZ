@@ -1,0 +1,6 @@
+a_num = sint.get_random_int(64)
+
+a = Array(2048, sint.get_type(64))
+a.assign_all(a_num)
+
+loopy_chunkier_odd_even_merge_sort(a)
